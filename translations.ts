@@ -302,7 +302,7 @@ export const translations = {
       phone: 'Phone',
       email: 'Email',
       office: 'Office',
-      officeAddress: 'Levent, Buyukdere Cd. No:193\n34394 Sisli/Istanbul',
+      officeAddress: 'İstanbul/Beylikdüzü',
       faqTitle: 'Frequently Asked Questions',
       faq1q: 'Is the first consultation free?',
       faq1a: 'Yes, the 30-minute introductory meeting is free.',
