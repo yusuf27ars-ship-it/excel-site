@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
+// SENİN FORMSPREE URL'İN:
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xjknrdvd";
+
 const Contact: React.FC = () => {
   const { t } = useLanguage();
   const [formData, setFormData] = useState({
@@ -10,20 +13,46 @@ const Contact: React.FC = () => {
     subject: '',
     message: ''
   });
-  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate form submission
-    setStatus('success');
-    setTimeout(() => {
+
+    // Basit ön kontrol
+    if (!formData.name || !formData.email || !formData.message) return;
+
+    setStatus('submitting');
+
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+        }),
+      });
+
+      if (response.ok) {
+        setStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
-        setStatus('idle');
-    }, 3000);
+        setTimeout(() => setStatus('idle'), 3000);
+      } else {
+        setStatus('error');
+      }
+    } catch (err) {
+      setStatus('error');
+    }
   };
 
   return (
@@ -47,8 +76,7 @@ const Contact: React.FC = () => {
               </div>
               <div className="ml-4">
                 <h3 className="text-lg font-medium text-white">{t.contact.phone}</h3>
-                <p className="mt-2 text-slate-300">+90 5396857696</p>
-                <p className="text-slate-400 text-sm">09:00 - 18:00</p>
+                <p className="mt-2 text-slate-300">539 685 76 96</p>
               </div>
             </div>
 
@@ -60,8 +88,7 @@ const Contact: React.FC = () => {
               </div>
               <div className="ml-4">
                 <h3 className="text-lg font-medium text-white">{t.contact.email}</h3>
-                <p className="mt-2 text-slate-300">Yusuf.27ars@gmail.com</p>
-                <p className="text-slate-400 text-sm">24h Response</p>
+                <p className="mt-2 text-slate-300">yusuf.27ars@gmail.com</p>
               </div>
             </div>
 
@@ -78,29 +105,31 @@ const Contact: React.FC = () => {
                 </p>
               </div>
             </div>
-            
-             <div className="mt-12 bg-slate-800 p-6 rounded-lg border border-slate-700">
-                <h4 className="text-lg font-semibold text-indigo-400 mb-2">{t.contact.faqTitle}</h4>
-                <p className="text-slate-300 text-sm italic">
-                  "{t.contact.faq1q}"
-                </p>
-                <p className="text-slate-400 text-sm mb-4">
-                  {t.contact.faq1a}
-                </p>
-                 <p className="text-slate-300 text-sm italic">
-                  "{t.contact.faq2q}"
-                </p>
-                <p className="text-slate-400 text-sm">
-                  {t.contact.faq2a}
-                </p>
+
+            <div className="mt-12 bg-slate-800 p-6 rounded-lg border border-slate-700">
+              <h4 className="text-lg font-semibold text-indigo-400 mb-2">{t.contact.faqTitle}</h4>
+              <p className="text-slate-300 text-sm italic">
+                "{t.contact.faq1q}"
+              </p>
+              <p className="text-slate-400 text-sm mb-4">
+                {t.contact.faq1a}
+              </p>
+              <p className="text-slate-300 text-sm italic">
+                "{t.contact.faq2q}"
+              </p>
+              <p className="text-slate-400 text-sm">
+                {t.contact.faq2a}
+              </p>
             </div>
           </div>
 
           {/* Form */}
           <div className="bg-white rounded-2xl p-8 text-slate-900 shadow-2xl">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6" noValidate>
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-slate-700">{t.contact.form.name}</label>
+                <label htmlFor="name" className="block text-sm font-medium text-slate-700">
+                  {t.contact.form.name}
+                </label>
                 <input
                   type="text"
                   name="name"
@@ -112,8 +141,11 @@ const Contact: React.FC = () => {
                   placeholder={t.contact.form.namePh}
                 />
               </div>
+
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700">{t.contact.form.email}</label>
+                <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+                  {t.contact.form.email}
+                </label>
                 <input
                   type="email"
                   name="email"
@@ -125,8 +157,11 @@ const Contact: React.FC = () => {
                   placeholder={t.contact.form.emailPh}
                 />
               </div>
+
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-slate-700">{t.contact.form.subject}</label>
+                <label htmlFor="subject" className="block text-sm font-medium text-slate-700">
+                  {t.contact.form.subject}
+                </label>
                 <input
                   type="text"
                   name="subject"
@@ -138,8 +173,11 @@ const Contact: React.FC = () => {
                   placeholder={t.contact.form.subjectPh}
                 />
               </div>
+
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-slate-700">{t.contact.form.message}</label>
+                <label htmlFor="message" className="block text-sm font-medium text-slate-700">
+                  {t.contact.form.message}
+                </label>
                 <textarea
                   name="message"
                   id="message"
@@ -151,17 +189,34 @@ const Contact: React.FC = () => {
                   placeholder={t.contact.form.messagePh}
                 ></textarea>
               </div>
+
               <button
                 type="submit"
-                disabled={status === 'success'}
+                disabled={status === 'submitting' || status === 'success'}
                 className="w-full flex justify-center py-4 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:bg-green-600 disabled:cursor-default"
               >
                 {status === 'success' ? (
-                    <span className="flex items-center">{t.contact.form.success} <CheckCircle className="ml-2 h-5 w-5"/></span>
+                  <span className="flex items-center">
+                    {t.contact.form.success}
+                    <CheckCircle className="ml-2 h-5 w-5" />
+                  </span>
+                ) : status === 'submitting' ? (
+                  <span className="flex items-center">
+                    {t.contact.form.sending}
+                  </span>
                 ) : (
-                    <span className="flex items-center">{t.contact.form.send} <Send className="ml-2 h-4 w-4"/></span>
+                  <span className="flex items-center">
+                    {t.contact.form.send}
+                    <Send className="ml-2 h-4 w-4" />
+                  </span>
                 )}
               </button>
+
+              {status === 'error' && (
+                <p className="text-sm text-red-500 mt-2">
+                  Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.
+                </p>
+              )}
             </form>
           </div>
         </div>
