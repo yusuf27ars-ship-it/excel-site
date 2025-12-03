@@ -132,7 +132,7 @@ export const translations = {
       phone: 'Telefon',
       email: 'E-posta',
       office: 'Ofis',
-      officeAddress: 'Levent, Büyükdere Cd. No:193\n34394 Şişli/İstanbul',
+      officeAddress: 'İstanbul/Beylikdüzü',
       faqTitle: 'Sıkça Sorulan Sorular',
       faq1q: 'İlk görüşme ücretsiz mi?',
       faq1a: 'Evet, 30 dakikalık tanışma toplantısı ücretsizdir.',
