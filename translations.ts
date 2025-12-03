@@ -129,8 +129,8 @@ export const translations = {
     contact: {
       title: 'İletişime Geçin',
       description: 'Sorularınız veya randevu talepleriniz için aşağıdaki formu doldurabilirsiniz.',
-      phone: '539 685 7696',
-      email: 'Yusuf.27ars@gmail.com',
+      phone: 'Telefon',
+      email: 'E Mail',
       office: 'Ofis',
       officeAddress: 'İstanbul/Beylikdüzü',
       faqTitle: 'Sıkça Sorulan Sorular',
